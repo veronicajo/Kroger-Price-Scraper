@@ -5,9 +5,8 @@ app.use(express.urlencoded({extended: false}));
 
 const axios = require('axios');
 const cheerio = require('cheerio');
-const { query } = require('express');
      
-PORT = process.env.PORT || 10046; 
+// PORT = process.env.PORT || 10046; 
 
 
 /*
@@ -33,12 +32,24 @@ function findData($) {
 
 app.get('/', (req, res) => {
 const searchTerm = req.query.search;
-const shopSearchUrl = `https://www.target.com/s?searchTerm=${searchTerm}`;
-console.log(shopSearchUrl)
+const shopSearchUrl = `https://www.kroger.com/search?query=${searchTerm}&searchType=default_search&fulfillment=all`;
 const agent = {"User-Agent":'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'}
 axios(shopSearchUrl, headers=agent)
-.then(response => console.log(response.data))
-.then(res.send("sad cowboy"))
+.then(response => {
+    const htmlPage = response.data;
+    const $ = cheerio.load(htmlPage);
+    const obj = $('.AutoGrid');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    if (obj[0] == undefined) {
+      res.send({price: "No results."})
+    } else {
+      const price = obj.find('[typeof=Price]')['0']['attribs'].value;
+      const productDesc = obj.find('[data-qa=cart-page-item-description]')['0']['children'][0].data;
+      
+      res.send(findData($));
+    }
+})
 .catch(console.error);
 });
 
@@ -55,6 +66,8 @@ function errorHandler (err, req, res, next) {
 /*
     LISTENER
 */
-app.listen(PORT, function(){         
-  console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.')
-  });
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
+app.listen(port);
