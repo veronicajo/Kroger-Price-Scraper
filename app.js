@@ -34,8 +34,12 @@ app.get('/', (req, res) => {
   const searchTerm = req.query.search;
   const shopSearchUrl = `https://www.target.com/s?searchTerm=${searchTerm}`;
   axios(shopSearchUrl)
-  .then(response => response.json())
-  .then(data => console.log(data))
+  .then(response => {
+        const htmlPage = response.data;
+        const $ = cheerio.load(htmlPage);
+
+        res.send($)
+  })
   .catch(console.error);
   });
 
