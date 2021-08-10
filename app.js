@@ -33,8 +33,8 @@ function findData($) {
 app.get('/', (req, res) => {
 const searchTerm = req.query.search;
 const shopSearchUrl = `https://www.kroger.com/search?query=${searchTerm}&searchType=default_search&fulfillment=all`;
-console.log(shopSearchUrl)
-axios(shopSearchUrl)
+const agent = {"User-Agent":'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'}
+axios(shopSearchUrl, headers=agent)
 .then(response => {
     const htmlPage = response.data;
     const $ = cheerio.load(htmlPage);
