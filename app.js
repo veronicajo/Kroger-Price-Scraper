@@ -37,7 +37,8 @@ const shopSearchUrl = `https://www.target.com/s?searchTerm=${searchTerm}`;
 console.log(shopSearchUrl)
 const agent = {"User-Agent":'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'}
 axios(shopSearchUrl, headers=agent)
-.then(response => res.send(response.data))
+.then(response => console.log(response.data))
+.then(res.send("sad cowboy"))
 .catch(console.error);
 });
 
