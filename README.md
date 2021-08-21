@@ -6,7 +6,7 @@ Built using JavaScript, Express, and Node.js.
 
 To see this API in action, please refer to [Recipe Counter](https://github.com/veronicajo/Recipe-Counter).
 
-===
+- - - -
 
 ## How to Use
 Send a GET request to the following URL:
